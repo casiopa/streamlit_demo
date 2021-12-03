@@ -1,19 +1,19 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
+import plotly.figure_factory as ff
 
 
+st.title('Streamlit demo')
 
 st.sidebar.title('Sidebar title')
-
 elementos = st.sidebar.selectbox(
     'Selecciona el tipo de elemento',
     ('Texto', 'Input Widgets', 'Gráficos'))
 
 
-
 if elementos == 'Texto':
-    st.title('Texto')
+    st.header('Texto')
     
     st.subheader('text')
     st.text('Fixed width text')
@@ -29,18 +29,16 @@ if elementos == 'Texto':
     - Elemento 3''')
 
     st.subheader('code')
-    st.code('for i in range(8): foo()')
-
-
+    st.code('import streamlit as st')
+    st.code('streamlit run my_file.py')
 
 
 elif elementos =='Input Widgets':    
-    st.title('Input Widgets')
+    st.header('Input Widgets')
 
     st.subheader('checkbox')
     if st.checkbox('Estoy de acuerdo', False):
         st.write('Estoy de acuerdo y se lleva a cabo la acción')
-
 
     st.subheader('selectbox')
     select = st.selectbox(
@@ -56,11 +54,9 @@ elif elementos =='Input Widgets':
 
     st.write('You selected:', radio)
 
-
     st.subheader('number_input')
     number = st.number_input('Insert a number', 1, 10, step=1)
     st.write('The current number is ', number)
-
 
     st.subheader('multiselect')
     multi = st.multiselect(
@@ -72,7 +68,7 @@ elif elementos =='Input Widgets':
 
 
 elif elementos == 'Gráficos': 
-    st.title('Gráficos')
+    st.header('Gráficos')
 
     st.subheader('line_chart')
     line_data = pd.DataFrame(np.random.randn(20, 3), columns=['a', 'b', 'c'])
@@ -85,3 +81,20 @@ elif elementos == 'Gráficos':
     st.subheader('map')
     map_df = pd.DataFrame(np.random.randn(1000, 2) / [50, 50] + [37.76, -122.4], columns=['lat', 'lon'])
     st.map(map_df)
+
+    st.subheader('plotly_fig')
+    # Add histogram data
+    x1 = np.random.randn(200) - 2
+    x2 = np.random.randn(200)
+    x3 = np.random.randn(200) + 2
+
+    # Group data together
+    hist_data = [x1, x2, x3]
+
+    group_labels = ['Group 1', 'Group 2', 'Group 3']
+
+    # Create distplot with custom bin_size
+    fig = ff.create_distplot(hist_data, group_labels, bin_size=[.1, .25, .5])
+
+    # Plot!
+    st.plotly_chart(fig, use_container_width=True)
